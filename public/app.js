@@ -51,12 +51,6 @@
         return '# ' + body.replace(/_/g, ' ');
     }
 
-    function commentLineToEntry(line) {
-        const text = line.replace(/^#\s*/, '').trim();
-        const body = text.replace(/\s+/g, '_');
-        return { hostname: COMMENT_PREFIX + body + COMMENT_SUFFIX, ip: COMMENT_IP };
-    }
-
     function jsonToLines(data) {
         if (!Array.isArray(data)) throw new Error('Ожидался массив объектов');
         return data.map(function (item) {
@@ -65,6 +59,8 @@
             const ip = (item && item.ip) || '';
             if (ip) return host + ' ' + ip;
             return host;
+        }).filter(function (line) {
+            return line.trim().length > 0;
         }).join('\n');
     }
 
@@ -77,9 +73,6 @@
             const raw = lines[i].trim();
             if (!raw) continue;
             if (raw.startsWith('#')) {
-                const entry = commentLineToEntry(raw);
-                entry.__line = i;
-                result.push(entry);
                 continue;
             }
             const parts = raw.split(/\s+/);
@@ -229,9 +222,13 @@
             const text = await file.text();
             const data = JSON.parse(text);
             editor.value = jsonToLines(data);
-            jsonView.value = JSON.stringify(data, null, 4);
+            const parsed = linesToJson(editor.value);
+            const clean = parsed.items.map(function (it) {
+                return { hostname: it.hostname, ip: it.ip };
+            });
+            jsonView.value = JSON.stringify(clean, null, 4);
             clearBad();
-            setStatus('Загружен: ' + file.name + ' (' + (Array.isArray(data) ? data.length : 0) + ' записей)', 'success');
+            setStatus('Загружен: ' + file.name + ' (' + clean.length + ' записей)', 'success');
         } catch (e) {
             setStatus('Ошибка чтения файла: ' + e.message, 'error');
         }
