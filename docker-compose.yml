@@ -1,0 +1,8 @@
+services:
+  novpn-editor:
+    build: .
+    image: novpn-editor:latest
+    container_name: novpn-editor
+    ports:
+      - "8099:80"
+    restart: unless-stopped

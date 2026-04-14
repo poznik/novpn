@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amnezia Split-Tunnel Editor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-left">
+            <div class="brand">Amnezia Split-Tunnel Editor</div>
+            <button id="uploadBtn" class="btn btn-primary">Загрузить</button>
+            <button id="addServiceBtn" class="btn">Добавить сервис</button>
+            <input type="file" id="fileInput" accept=".json,application/json" hidden>
+        </div>
+    </header>
+    <div id="dropOverlay" class="drop-overlay"><div class="drop-overlay-inner">Отпустите JSON-файл для загрузки</div></div>
+
+    <div id="serviceModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">Добавить сервис</div>
+                <button id="serviceModalClose" class="btn modal-close" aria-label="Закрыть">×</button>
+            </div>
+            <div id="serviceGrid" class="service-grid">
+                <div class="service-loading">Загрузка списка сервисов...</div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main">
+        <section class="pane pane-left">
+            <div class="pane-header">Редактор (построчно)</div>
+            <div class="editor-wrap">
+                <div id="highlight" class="highlight" aria-hidden="true"></div>
+                <textarea id="editor" spellcheck="false" placeholder="Загрузите файл или начните ввод:&#10;10.0.0.0/8&#10;example.com 1.2.3.4&#10;github.com"></textarea>
+            </div>
+        </section>
+        <section class="pane pane-right">
+            <div class="pane-header">JSON (readonly)</div>
+            <textarea id="jsonView" spellcheck="false" readonly placeholder="[]"></textarea>
+        </section>
+    </main>
+
+    <footer class="bottombar">
+        <div class="bottombar-actions">
+            <button id="checkBtn" class="btn">Проверить</button>
+            <button id="downloadBtn" class="btn btn-primary">Скачать</button>
+        </div>
+        <div id="status" class="status"></div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
